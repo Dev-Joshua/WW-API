@@ -1,7 +1,5 @@
 package com.apirest.wwapi.config;
 
-import java.sql.DriverManager;
-
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
