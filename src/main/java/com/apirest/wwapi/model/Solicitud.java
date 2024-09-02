@@ -38,6 +38,16 @@ public class Solicitud {
     @JsonBackReference("mascota-solicitud")
     private Mascota mascota;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    @JsonBackReference("cliente-solicitud")
+    private Usuario cliente;  // Este es el usuario que solicita el servicio
+
+    @ManyToOne
+    @JoinColumn(name = "prestador_id")
+    @JsonBackReference("prestador-solicitud")
+    private Usuario prestador;
+
     @OneToOne(mappedBy = "solicitud", cascade = CascadeType.ALL)
     @JsonManagedReference("pago-solicitud")
     private Pago pago;
@@ -92,6 +102,22 @@ public class Solicitud {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Usuario getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Usuario cliente) {
+        this.cliente = cliente;
+    }
+
+    public Usuario getPrestador() {
+        return prestador;
+    }
+
+    public void setPrestador(Usuario prestador) {
+        this.prestador = prestador;
     }
 
     

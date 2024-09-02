@@ -26,7 +26,7 @@ public class PagoService {
         return payRepository.save(payment);
     }
 
-    // public void deletePago(Long id) {
-    //     payRepository.deleteById(id);
-    // }
+    public void deletePago(Long id) {
+        payRepository.deleteById(id);
+    }
 }

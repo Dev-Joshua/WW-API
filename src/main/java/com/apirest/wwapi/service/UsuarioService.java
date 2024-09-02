@@ -1,11 +1,14 @@
 package com.apirest.wwapi.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.apirest.wwapi.model.Servicio;
 import com.apirest.wwapi.model.Usuario;
+import com.apirest.wwapi.model.Usuario.Role;
 import com.apirest.wwapi.repository.ServicioRepo;
 import com.apirest.wwapi.repository.UsuarioRepo;
 
@@ -29,17 +32,43 @@ public class UsuarioService {
     }
 
     
-    // //Create
+    //Create
     public Usuario createUser(Usuario user) {
-        return userRepository.save(user);
 
-       
+        Usuario nuevoUsuario = userRepository.save(user);
+        
+        switch (user.getRol()) {
+            case PASEADOR:
+                 asociarUsuarioConServicio(nuevoUsuario, "Caminata");
+                break;
+            case CUIDADOR:
+                 asociarUsuarioConServicio(nuevoUsuario, "Guarderia");
+                break;
+            case ENTRENADOR:
+                 asociarUsuarioConServicio(nuevoUsuario, "Entrenamiento");
+                break;
+            case CLIENTE:
+                break;
+        }
+        
+        return nuevoUsuario;
     }
-    // public Usuario saveUser(Usuario usuario) {
-        //     return userRepository.save(usuario);
-        // }
 
+     private void asociarUsuarioConServicio(Usuario usuario, String nombre_servicio) {
+        // Buscar el servicio correspondiente
+        Optional<Servicio> servicioOpt = servicioRepository.findByNombre_servicio(nombre_servicio);
 
+        if (servicioOpt.isPresent()) {
+            Servicio servicio = servicioOpt.get();
+            servicio.getUsuarios().add(usuario);
+            usuario.getServicios().add(servicio);
+
+            // Guardar la relación en la tabla usuarios_servicios
+            servicioRepository.save(servicio);
+        } else {
+            throw new RuntimeException("Servicio " + nombre_servicio + " no encontrado");
+        }
+    }
         
     //Update
     public Usuario updateUser(Integer id, Usuario usuarioDetails) {
@@ -58,6 +87,7 @@ public class UsuarioService {
         }
         return null;
     }
+
 
     //Delete
     public boolean deleteUser(Integer id) {

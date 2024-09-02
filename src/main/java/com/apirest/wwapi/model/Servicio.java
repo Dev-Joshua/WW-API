@@ -7,8 +7,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
@@ -19,10 +22,17 @@ import jakarta.persistence.Table;
 public class Servicio {
     //Variables de la clase
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_servicio")
     private Integer id_servicio;
 
+    @Column(name = "nombre_servicio")
     private String nombre_servicio;
+
+    @Column(name = "descripcion")
     private String descripcion;
+
+    @Column(name = "precio")
     private Float precio;
 
     // Relaciones
