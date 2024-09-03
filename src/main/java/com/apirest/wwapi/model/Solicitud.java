@@ -3,11 +3,15 @@ package com.apirest.wwapi.model;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -52,9 +56,38 @@ public class Solicitud {
     @JsonManagedReference("pago-solicitud")
     private Pago pago;
    
+    @Enumerated(EnumType.STRING)
     @Column(name = "estado")
-    private String estado;
+    private Estado estado;
 
+
+    public enum Estado {
+        PENDIENTE("Pendiente"),
+        EN_CURSO("En curso"),
+        FINALIZADO("Finalizado");
+
+        private final String displayName;
+
+        Estado(String displayName) {
+            this.displayName = displayName;
+        }
+
+        @JsonValue
+        public String getDisplayName() {
+            return displayName;
+        }
+        
+        @JsonCreator
+        public static Estado fromString(String value) {
+        for (Estado estado : Estado.values()) {
+            if (estado.displayName.equalsIgnoreCase(value)) {
+                return estado;
+            }
+        }
+        throw new IllegalArgumentException("Estado no válido: " + value);
+        }
+    }
+    
     //Getters & Setters
     public Integer getId_solicitud() {
         return id_solicitud;
@@ -96,11 +129,11 @@ public class Solicitud {
         this.pago = pago;
     }
 
-    public String getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
 

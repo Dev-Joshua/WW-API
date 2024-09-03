@@ -25,7 +25,7 @@ public class SolicitudService {
         return requestRepository.findAll();
     }
 
-    public Solicitud findByIdRequest(Long id) {
+    public Solicitud findByIdRequest(Integer id) {
         return requestRepository.findById(id).orElse(null);
     }
 
@@ -39,7 +39,7 @@ public class SolicitudService {
         return requestRepository.save(request);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         requestRepository.deleteById(id);
     }
 }

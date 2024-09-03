@@ -29,7 +29,7 @@ public class Servicio {
     @Column(name = "nombre_servicio")
     private String nombre_servicio;
 
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", length = 500)
     private String descripcion;
 
     @Column(name = "precio")

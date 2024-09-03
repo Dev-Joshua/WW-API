@@ -61,9 +61,9 @@ public class Usuario {
     @JsonManagedReference("usuario-mascota")
     private List<Mascota> mascotas;
 
-    // @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // @JsonManagedReference("usuario-solicitud")
-    // private Set<Solicitud> solicitudes = new HashSet<>();
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("usuario-calificacion")
+    private List<Calificacion> calificaciones;
 
     @ManyToMany
     @JoinTable(
@@ -72,7 +72,7 @@ public class Usuario {
         inverseJoinColumns = @JoinColumn(name = "servicio_id")
     )
     @JsonBackReference("usuario-servicio")
-    private Set<Servicio> servicios = new HashSet<>();
+    private List<Servicio> servicios;
 
     public enum Role {
         CLIENTE, ENTRENADOR, PASEADOR, CUIDADOR
@@ -90,6 +90,14 @@ public class Usuario {
 
     public String getNombre() {
         return nombre;
+    }
+
+    public List<Calificacion> getCalificaciones() {
+        return calificaciones;
+    }
+
+    public void setCalificaciones(List<Calificacion> calificaciones) {
+        this.calificaciones = calificaciones;
     }
 
     public void setNombre(String nombre) {
@@ -160,11 +168,11 @@ public class Usuario {
         this.mascotas = mascotas;
     }
 
-    public Set<Servicio> getServicios() {
+    public List<Servicio> getServicios() {
         return servicios;
     }
 
-    public void setServicios(Set<Servicio> servicios) {
+    public void setServicios(List<Servicio> servicios) {
         this.servicios = servicios;
     }
 

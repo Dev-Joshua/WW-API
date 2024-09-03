@@ -22,9 +22,13 @@ public class Pago {
     @Column(name = "id_pago")
     private Integer id_pago;
 
+    @Column(name = "monto")
     private Float monto;
+
+    @Column(name = "fecha_pago")
     private LocalDateTime fechaPago;
 
+    //Relaciones
     @OneToOne
     @JoinColumn(name = "solicitud_id")
     @JsonBackReference("pago-solicitud")

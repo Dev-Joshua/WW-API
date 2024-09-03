@@ -18,7 +18,7 @@ public class PagoService {
         return payRepository.findAll();
     }
 
-    public Pago getPayById(Long id) {
+    public Pago getPayById(Integer id) {
         return payRepository.findById(id).orElse(null);
     }
 
@@ -26,7 +26,7 @@ public class PagoService {
         return payRepository.save(payment);
     }
 
-    public void deletePago(Long id) {
+    public void deletePago(Integer id) {
         payRepository.deleteById(id);
     }
 }

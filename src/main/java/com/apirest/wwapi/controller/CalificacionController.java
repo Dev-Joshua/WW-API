@@ -34,7 +34,7 @@ public class CalificacionController {
     public ResponseEntity<List<Calificacion>> obtenerCalificacionesPorUsuario(@PathVariable Integer usuarioId) {
         Usuario usuario = new Usuario();
         usuario.setId_usuario(usuarioId);
-        List<Calificacion> calificaciones = calificacionService.findCalificacionesByUsuario(usuario);
+        List<Calificacion> calificaciones = calificacionService.getCalificacionByUsuario(usuarioId);
         return ResponseEntity.ok(calificaciones);
     }
 
@@ -42,7 +42,7 @@ public class CalificacionController {
     public ResponseEntity<List<Calificacion>> obtenerCalificacionesPorSolicitud(@PathVariable Integer solicitudId) {
         Solicitud solicitud = new Solicitud();
         solicitud.setId_solicitud(solicitudId);
-        List<Calificacion> calificaciones = calificacionService.findCalificacionesBySolicitud(solicitud);
+        List<Calificacion> calificaciones = calificacionService.getCalificacionBySolicitud(solicitud);
         return ResponseEntity.ok(calificaciones);
     }
 }

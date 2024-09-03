@@ -58,7 +58,7 @@ public class Mascota {
     @Column(name = "esterilizado")
     private Esterilizado esterilizado;
 
-    @Column(name = "descripcion_mascota")
+    @Column(name = "descripcion_mascota", length = 500)
     private String descripcion_mascota;
 
     @Column(name = "info_cuidado")

@@ -21,6 +21,7 @@ import com.apirest.wwapi.model.Pago;
 import com.apirest.wwapi.model.Servicio;
 import com.apirest.wwapi.model.Solicitud;
 import com.apirest.wwapi.model.Usuario;
+import com.apirest.wwapi.model.Solicitud.Estado;
 import com.apirest.wwapi.service.MascotaService;
 import com.apirest.wwapi.service.ServicioService;
 import com.apirest.wwapi.service.SolicitudService;
@@ -49,7 +50,7 @@ public class SolicitudController {
     }
 
     @GetMapping("/{id}")
-    public Solicitud getRequestById(@PathVariable Long id) {
+    public Solicitud getRequestById(@PathVariable Integer id) {
         return requestService.findByIdRequest(id);
     }
 
@@ -107,7 +108,7 @@ public class SolicitudController {
         request.setFecha_solicitud(LocalDateTime.now());
         request.setServicio(servicio);
         request.setMascota(mascota);
-        request.setEstado((String) requestPayLoad.get("estado"));
+        request.setEstado(Estado.PENDIENTE);
         request.setCliente(cliente);
         request.setPrestador(prestador);
       
@@ -123,8 +124,8 @@ public class SolicitudController {
         request.setPago(pay);
 
         Solicitud newRequest = requestService.createRequest(request);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(newRequest);
+        
     }
     
     public Solicitud createRequest(@RequestBody Solicitud solicitud) {
@@ -132,7 +133,7 @@ public class SolicitudController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteSolicitud(@PathVariable Long id) {
+    public void deleteSolicitud(@PathVariable Integer id) {
         requestService.deleteById(id);
     }
 }

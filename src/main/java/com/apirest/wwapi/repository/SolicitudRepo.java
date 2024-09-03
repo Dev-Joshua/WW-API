@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.apirest.wwapi.model.Solicitud;
 
 @Repository
-public interface SolicitudRepo extends JpaRepository<Solicitud, Long>{
+public interface SolicitudRepo extends JpaRepository<Solicitud, Integer>{
 
 }

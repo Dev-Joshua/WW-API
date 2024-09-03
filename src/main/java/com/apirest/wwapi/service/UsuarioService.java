@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.apirest.wwapi.model.Servicio;
@@ -21,6 +22,10 @@ public class UsuarioService {
 
     @Autowired
     private ServicioRepo servicioRepository;
+
+    @Autowired
+    @Lazy
+    private CalificacionService calificacionService;
     
     //Read
     public List<Usuario> getAllUsers() {
@@ -54,7 +59,7 @@ public class UsuarioService {
         return nuevoUsuario;
     }
 
-     private void asociarUsuarioConServicio(Usuario usuario, String nombre_servicio) {
+    private void asociarUsuarioConServicio(Usuario usuario, String nombre_servicio) {
         // Buscar el servicio correspondiente
         Optional<Servicio> servicioOpt = servicioRepository.findByNombre_servicio(nombre_servicio);
 
@@ -68,6 +73,17 @@ public class UsuarioService {
         } else {
             throw new RuntimeException("Servicio " + nombre_servicio + " no encontrado");
         }
+    }
+
+     public List<Usuario> getPrestadoresPorServicio(Integer servicioId) {
+        List<Usuario> usuarios = userRepository.findByServicioId(servicioId);
+        // Puedes ordenar la lista de usuarios por calificación promedio aquí
+        usuarios.sort((u1, u2) -> {
+            double calificacionPromedio1 = calificacionService.getCalificacionPromedio(u1.getId_usuario());
+            double calificacionPromedio2 = calificacionService.getCalificacionPromedio(u2.getId_usuario());
+            return Double.compare(calificacionPromedio2, calificacionPromedio1); // Orden descendente
+        });
+        return usuarios;
     }
         
     //Update

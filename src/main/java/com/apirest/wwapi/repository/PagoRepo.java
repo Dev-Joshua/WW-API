@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.apirest.wwapi.model.Pago;
 
 @Repository
-public interface PagoRepo extends JpaRepository<Pago, Long>{
+public interface PagoRepo extends JpaRepository<Pago, Integer>{
 
 }
 

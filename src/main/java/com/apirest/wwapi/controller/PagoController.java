@@ -28,7 +28,7 @@ public class PagoController {
     }
 
     @GetMapping("/{id}")
-    public Pago getPaymentById(@PathVariable Long id) {
+    public Pago getPaymentById(@PathVariable Integer id) {
         return payService.getPayById(id);
     }
 
@@ -38,7 +38,7 @@ public class PagoController {
     }
 
     @DeleteMapping("/{id}")
-    public void deletePago(@PathVariable Long id) {
+    public void deletePago(@PathVariable Integer id) {
         payService.deletePago(id);
     }
 }
