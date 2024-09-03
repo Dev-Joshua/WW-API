@@ -29,6 +29,7 @@ public class Solicitud {
     @Column(name = "id_solicitud")
     private Integer id_solicitud;
 
+    @Column(name = "fecha_solicitud")
     private LocalDateTime fecha_solicitud;
 
     //Relaciones 

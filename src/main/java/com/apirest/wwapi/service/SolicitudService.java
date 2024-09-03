@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.apirest.wwapi.model.Pago;
 import com.apirest.wwapi.model.Solicitud;
+import com.apirest.wwapi.model.Usuario;
 import com.apirest.wwapi.repository.PagoRepo;
 import com.apirest.wwapi.repository.SolicitudRepo;
 
@@ -18,7 +19,7 @@ public class SolicitudService {
     @Autowired
     private SolicitudRepo requestRepository;
 
-     @Autowired
+    @Autowired
     private PagoRepo payrepRepository;
 
     public List<Solicitud> getAll() {
@@ -27,6 +28,10 @@ public class SolicitudService {
 
     public Solicitud findByIdRequest(Integer id) {
         return requestRepository.findById(id).orElse(null);
+    }
+
+    public List<Solicitud> findByUsuario(Usuario usuario) {
+        return requestRepository.findByClienteOrPrestador(usuario, usuario);
     }
 
     @Transactional

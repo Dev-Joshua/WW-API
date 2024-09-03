@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.apirest.wwapi.model.Pago;
+import com.apirest.wwapi.model.Usuario;
 import com.apirest.wwapi.repository.PagoRepo;
 
 @Service
@@ -28,5 +29,13 @@ public class PagoService {
 
     public void deletePago(Integer id) {
         payRepository.deleteById(id);
+    }
+
+    public List<Pago> findPagosByPrestador(Usuario prestador) {
+        return payRepository.findByPrestador(prestador);
+    }
+
+    public Double calcularTotalPagosPorPrestador(Usuario prestador) {
+        return payRepository.findTotalPagosByPrestador(prestador);
     }
 }

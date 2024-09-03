@@ -24,12 +24,15 @@ public class CalificacionController {
     @Autowired
     private CalificacionService calificacionService;
 
+
+    //Generar una calificacion
     @PostMapping
     public ResponseEntity<Calificacion> crearCalificacion(@RequestBody Calificacion calificacion) {
         Calificacion nuevaCalificacion = calificacionService.saveCalificacion(calificacion);
         return new ResponseEntity<>(nuevaCalificacion, HttpStatus.CREATED);
     }
 
+    //Ver calificacion del usuario
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<Calificacion>> obtenerCalificacionesPorUsuario(@PathVariable Integer usuarioId) {
         Usuario usuario = new Usuario();
@@ -38,6 +41,7 @@ public class CalificacionController {
         return ResponseEntity.ok(calificaciones);
     }
 
+    //Ver calificacion con el id de solicitud
     @GetMapping("/solicitud/{solicitudId}")
     public ResponseEntity<List<Calificacion>> obtenerCalificacionesPorSolicitud(@PathVariable Integer solicitudId) {
         Solicitud solicitud = new Solicitud();

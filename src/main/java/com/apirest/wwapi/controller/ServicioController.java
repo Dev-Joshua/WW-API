@@ -77,7 +77,7 @@ public class ServicioController {
                 prestadores.sort(Comparator.comparingInt(this::obtenerNumeroDeComentarios).reversed());
                 break;
             case "ubicacion":
-                // Implementar lógica para ordenar por ubicación si tienes un campo de ubicación
+                // Implementar lógica para ubicacion
                 break;
         }
 

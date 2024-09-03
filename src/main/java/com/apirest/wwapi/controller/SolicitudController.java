@@ -10,10 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apirest.wwapi.model.Mascota;
@@ -30,6 +32,8 @@ import com.apirest.wwapi.service.UsuarioService;
 @RestController
 @RequestMapping("/solicitudes")
 public class SolicitudController {
+
+    private static final LocalDateTime LocalDateTime = null;
 
     @Autowired
     private SolicitudService requestService;
@@ -130,6 +134,69 @@ public class SolicitudController {
     
     public Solicitud createRequest(@RequestBody Solicitud solicitud) {
         return requestService.createRequest(solicitud);
+    }
+
+    // Aceptar o rechazar una solicitud
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<Solicitud> cambiarEstadoSolicitud(
+            @PathVariable Integer id, 
+            @RequestParam Estado estado) {
+        Solicitud solicitud = requestService.findByIdRequest(id);
+
+        if (solicitud == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        if (estado == Estado.EN_CURSO || estado == Estado.PENDIENTE) {
+            solicitud.setEstado(estado);
+            requestService.createRequest(solicitud);
+            return ResponseEntity.ok(solicitud);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    // Iniciar un servicio
+    @PatchMapping("/{id}/iniciar")
+    public ResponseEntity<Solicitud> iniciarServicio(@PathVariable Integer id) {
+        Solicitud solicitud = requestService.findByIdRequest(id);
+
+        if (solicitud == null || solicitud.getEstado() != Estado.EN_CURSO) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        solicitud.setEstado(Estado.EN_CURSO);
+        solicitud.setFecha_solicitud(LocalDateTime);
+        requestService.createRequest(solicitud);
+        return ResponseEntity.ok(solicitud);
+    }
+
+    // Finalizar un servicio
+    @PatchMapping("/{id}/finalizar")
+    public ResponseEntity<Solicitud> finalizarServicio(@PathVariable Integer id) {
+        Solicitud solicitud = requestService.findByIdRequest(id);
+
+        if (solicitud == null || solicitud.getEstado() != Estado.EN_CURSO) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        solicitud.setEstado(Estado.FINALIZADO);
+        solicitud.setFecha_solicitud(LocalDateTime);
+        requestService.createRequest(solicitud);
+        return ResponseEntity.ok(solicitud);
+    }
+
+    // Obtener solicitudes por usuario
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<Solicitud>> obtenerSolicitudesPorUsuario(@PathVariable Integer usuarioId) {
+        Usuario usuario = userService.getUserById(usuarioId);
+
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        List<Solicitud> solicitudes = requestService.findByUsuario(usuario);
+        return ResponseEntity.ok(solicitudes);
     }
 
     @DeleteMapping("/{id}")

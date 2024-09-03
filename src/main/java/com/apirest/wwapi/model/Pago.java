@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -34,9 +35,10 @@ public class Pago {
     @JsonBackReference("pago-solicitud")
     private Solicitud solicitud;
 
-    // @ManyToOne
-    // @JoinColumn(name = "solicitud_id")
-    // private Solicitud solicitud;
+    // Relación con Usuario (prestador)
+    @ManyToOne
+    @JoinColumn(name = "prestador_id", referencedColumnName = "id_usuario")
+    private Usuario prestador;
 
 
     //Getters & Setters
