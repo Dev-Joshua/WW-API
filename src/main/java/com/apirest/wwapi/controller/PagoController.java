@@ -15,7 +15,7 @@ import com.apirest.wwapi.model.Pago;
 import com.apirest.wwapi.service.PagoService;
 
 @RestController
-@RequestMapping("/pagos")
+@RequestMapping("/api/v1/wwdemo/pagos")
 public class PagoController {
 
     @Autowired

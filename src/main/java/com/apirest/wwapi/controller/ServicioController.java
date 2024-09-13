@@ -23,7 +23,7 @@ import com.apirest.wwapi.service.ServicioService;
 import com.apirest.wwapi.service.UsuarioService;
 
 @RestController
-@RequestMapping("/servicios")
+@RequestMapping("/api/v1/wwdemo/servicios")
 public class ServicioController {
 
     @Autowired

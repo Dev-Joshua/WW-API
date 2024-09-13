@@ -30,7 +30,7 @@ import com.apirest.wwapi.service.SolicitudService;
 import com.apirest.wwapi.service.UsuarioService;
 
 @RestController
-@RequestMapping("/solicitudes")
+@RequestMapping("/api/v1/wwdemo/solicitudes")
 public class SolicitudController {
 
     private static final LocalDateTime LocalDateTime = null;

@@ -19,7 +19,7 @@ import com.apirest.wwapi.service.MascotaService;
 import com.apirest.wwapi.service.UsuarioService;
 
 @RestController
-@RequestMapping("/mascotas")
+@RequestMapping("/api/v1/wwdemo/mascotas")
 public class MascotaController {
 
     @Autowired

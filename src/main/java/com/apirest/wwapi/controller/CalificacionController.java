@@ -18,7 +18,7 @@ import com.apirest.wwapi.model.Usuario;
 import com.apirest.wwapi.service.CalificacionService;
 
 @RestController
-@RequestMapping("/calificaciones")
+@RequestMapping("/api/v1/wwdemo/calificaciones")
 public class CalificacionController {
 
     @Autowired

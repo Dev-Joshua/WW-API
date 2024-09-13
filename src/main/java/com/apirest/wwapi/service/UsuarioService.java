@@ -1,10 +1,19 @@
 package com.apirest.wwapi.service;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+// import org.springframework.security.core.authority.SimpleGrantedAuthority;
+// import org.springframework.security.core.userdetails.UserDetails;
+// import org.springframework.security.core.userdetails.UserDetailsService;
+// import org.springframework.security.core.userdetails.UsernameNotFoundException;
+// import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.apirest.wwapi.model.Servicio;
@@ -24,7 +33,6 @@ public class UsuarioService {
     private ServicioRepo servicioRepository;
 
     @Autowired
-    @Lazy
     private CalificacionService calificacionService;
     
     //Read
@@ -85,6 +93,36 @@ public class UsuarioService {
         });
         return usuarios;
     }
+
+     // Implementación del método loadUserByUsername de UserDetailsService
+    // @Override
+    // public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    //     Usuario usuario = userRepository.findByEmail(username)
+    //             .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con el email: " + username));
+    //     return new org.springframework.security.core.userdetails.User(
+    //             usuario.getEmail(), 
+    //             usuario.getContrasena(), 
+    //             getAuthorities(usuario)
+    //     );
+    // }
+
+    // private Collection<? extends GrantedAuthority> getAuthorities(Usuario usuario) {
+    //     return Arrays.stream(usuario.getRol().name().split(","))
+    //             .map(SimpleGrantedAuthority::new)
+    //             .collect(Collectors.toList());
+    // }
+
+    // @Override
+    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    //     Usuario usuario = userRepository.findByEmail(email)
+    //             .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        
+    //     return new org.springframework.security.core.userdetails.User(
+    //             usuario.getEmail(),
+    //             usuario.getContrasena(),
+    //             Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name()))
+    //     );
+    // }
         
     //Update
     public Usuario updateUser(Integer id, Usuario usuarioDetails) {
