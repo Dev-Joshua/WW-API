@@ -4,7 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,8 @@ import com.apirest.wwapi.service.UsuarioService;
 @RequestMapping("/api/v1/wwdemo/solicitudes")
 public class SolicitudController {
 
+
+    private static final Logger logger = LoggerFactory.getLogger(SolicitudController.class);
     private static final LocalDateTime LocalDateTime = null;
 
     @Autowired
@@ -76,11 +81,12 @@ public class SolicitudController {
             @PathVariable Integer usuarioId,
             @RequestBody Map<String, Object> requestPayLoad) {
 
-        
+        // logger.info("Request payload: {}", requestPayLoad);
         
         //Buscar el usuario 'cliente'
         Usuario cliente = userService.getUserById(usuarioId);
         if (cliente == null) {
+            // logger.info("Cliente no encontrado: {}", usuarioId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
@@ -88,6 +94,7 @@ public class SolicitudController {
         Integer mascotaId = ((Number) requestPayLoad.get("mascota_id")).intValue();
         Mascota mascota = petService.getPetById(mascotaId);
         if (mascota == null) {
+            // logger.info("Mascota no encontrada: {}", mascotaId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
@@ -95,13 +102,16 @@ public class SolicitudController {
         Integer servicioId = ((Number) requestPayLoad.get("servicio_id")).intValue();
         Servicio servicio = servicioService.findById(servicioId);
         if (servicio == null) {
+            // logger.info("Servicio no encontrado: {}", usuarioId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         //Seleccionar al usuario 'prestador' del servicio
         Integer prestadorId = ((Number) requestPayLoad.get("prestador_id")).intValue();
         Usuario prestador = userService.getUserById(prestadorId);
-        if (prestador == null || !servicio.getUsuarios().contains(prestador)) {
+        Set<Usuario> prestadores = servicio.getUsuarios();
+        if (prestadores == null || !prestadores.contains(prestador)) {
+            logger.error("Prestador no válido: {}", prestadorId);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
@@ -109,25 +119,23 @@ public class SolicitudController {
 
         //Crear solicitud
         Solicitud request = new Solicitud();
-        request.setFecha_solicitud(LocalDateTime.now());
+        request.setFecha_solicitud(java.time.LocalDateTime.now());
         request.setServicio(servicio);
         request.setMascota(mascota);
-        request.setEstado(Estado.PENDIENTE);
+        request.setEstado(Estado.fromString(requestPayLoad.get("estado").toString()));
         request.setCliente(cliente);
         request.setPrestador(prestador);
       
-        // Map<String, Object> paymentLoad = (Map<String, Object>) requestPayLoad.get("pago");
-        // Pago pay = new Pago();
-        // pay.setMonto(((Number) paymentLoad.get("monto")).floatValue());
-        // pay.setFechaPago(LocalDateTime.now());
-
+        //Crear pago
         Pago pay = new Pago();
         pay.setMonto(servicio.getPrecio());
-        pay.setFechaPago(LocalDateTime.now());
+        pay.setFechaPago(java.time.LocalDateTime.now());
 
         request.setPago(pay);
 
         Solicitud newRequest = requestService.createRequest(request);
+        // logger.info("Solicitud creada con éxito: {}", newRequest.getId_solicitud());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(newRequest);
         
     }

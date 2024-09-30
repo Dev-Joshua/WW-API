@@ -1,10 +1,15 @@
 package com.apirest.wwapi.controller;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,11 +22,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.apirest.wwapi.model.Mascota;
 import com.apirest.wwapi.model.Usuario;
 import com.apirest.wwapi.service.MascotaService;
+import com.apirest.wwapi.service.SolicitudService;
 import com.apirest.wwapi.service.UsuarioService;
+
+import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequestMapping("/api/v1/wwdemo/usuarios")
+@RequiredArgsConstructor
 public class UsuarioController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(SolicitudService.class);
+
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private UsuarioService userService;
@@ -50,24 +64,36 @@ public class UsuarioController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Integer id, @RequestBody Usuario usuarioDetails) {
-       Usuario usuario = userService.getUserById(id);
-       if (usuario == null) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
-    }
+    public ResponseEntity<Map<String, String>> updateUser(@PathVariable Integer id, @RequestBody Usuario usuarioDetails) {
+        Usuario usuario = userService.getUserById(id);
+        if (usuario == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", "Usuario no encontrado"));
+        }
 
+        if (usuarioDetails.getContrasena() != null && !usuarioDetails.getContrasena().isEmpty()) {
+            logger.info("Actualizando contraseña para el usuario ID: {}", id);
+            usuario.setContrasena(passwordEncoder.encode(usuarioDetails.getContrasena()));
+        } else {
+            logger.info("No se ha proporcionado una nueva contraseña, manteniendo la contraseña actual para el usuario ID: {}", id);
+            //Mantener la contraseña sin cambios
+            usuario.setContrasena(usuario.getContrasena());
+        }
+
+        
+        usuario.setFoto_usuario(usuarioDetails.getFoto_usuario());
         usuario.setNombre(usuarioDetails.getNombre());
         usuario.setApellidos(usuarioDetails.getApellidos());
         usuario.setDocumento_identidad(usuarioDetails.getDocumento_identidad());
+        usuario.setCiudad(usuarioDetails.getCiudad());
         usuario.setDireccion(usuarioDetails.getDireccion());
         usuario.setCelular(usuarioDetails.getCelular());
         usuario.setEmail(usuarioDetails.getEmail());
         usuario.setContrasena(usuarioDetails.getContrasena());
         usuario.setRol(usuarioDetails.getRol());
 
-        userService.createUser(usuario);
+        userService.updateUser(id, usuario);
 
-        return ResponseEntity.ok("Usuario actualizado exitosamente");
+        return ResponseEntity.ok(Collections.singletonMap("message", "Usuario actualizado con exito"));
     }
     
 

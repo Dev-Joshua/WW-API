@@ -1,30 +1,33 @@
 package com.apirest.wwapi.service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-// import org.springframework.security.core.authority.SimpleGrantedAuthority;
-// import org.springframework.security.core.userdetails.UserDetails;
-// import org.springframework.security.core.userdetails.UserDetailsService;
-// import org.springframework.security.core.userdetails.UsernameNotFoundException;
-// import org.springframework.security.core.GrantedAuthority;
+
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.apirest.wwapi.model.Servicio;
 import com.apirest.wwapi.model.Usuario;
-import com.apirest.wwapi.model.Usuario.Role;
 import com.apirest.wwapi.repository.ServicioRepo;
 import com.apirest.wwapi.repository.UsuarioRepo;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UsuarioService {
       
+    private static final Logger logger = LoggerFactory.getLogger(SolicitudService.class);
+
+    private final PasswordEncoder passwordEncoder;
     
     @Autowired
     private UsuarioRepo userRepository;
@@ -44,7 +47,11 @@ public class UsuarioService {
         return userRepository.findById(usuarioId).orElse(null);
     }
 
-    
+    // Método para obtener el usuario por su email (extraído del token JWT)
+    public Usuario findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
+    }
     //Create
     public Usuario createUser(Usuario user) {
 
@@ -83,7 +90,8 @@ public class UsuarioService {
         }
     }
 
-     public List<Usuario> getPrestadoresPorServicio(Integer servicioId) {
+        // usuarios proveedores
+        public List<Usuario> getPrestadoresPorServicio(Integer servicioId) {
         List<Usuario> usuarios = userRepository.findByServicioId(servicioId);
         // Puedes ordenar la lista de usuarios por calificación promedio aquí
         usuarios.sort((u1, u2) -> {
@@ -94,49 +102,30 @@ public class UsuarioService {
         return usuarios;
     }
 
-     // Implementación del método loadUserByUsername de UserDetailsService
-    // @Override
-    // public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    //     Usuario usuario = userRepository.findByEmail(username)
-    //             .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con el email: " + username));
-    //     return new org.springframework.security.core.userdetails.User(
-    //             usuario.getEmail(), 
-    //             usuario.getContrasena(), 
-    //             getAuthorities(usuario)
-    //     );
-    // }
-
-    // private Collection<? extends GrantedAuthority> getAuthorities(Usuario usuario) {
-    //     return Arrays.stream(usuario.getRol().name().split(","))
-    //             .map(SimpleGrantedAuthority::new)
-    //             .collect(Collectors.toList());
-    // }
-
-    // @Override
-    // public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    //     Usuario usuario = userRepository.findByEmail(email)
-    //             .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-        
-    //     return new org.springframework.security.core.userdetails.User(
-    //             usuario.getEmail(),
-    //             usuario.getContrasena(),
-    //             Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name()))
-    //     );
-    // }
+     
         
     //Update
+    @Transactional
     public Usuario updateUser(Integer id, Usuario usuarioDetails) {
         Usuario usuario = userRepository.findById(id).orElse(null);
         if (usuario != null) {
             usuario.setId_usuario(usuarioDetails.getId_usuario());
+            usuario.setFoto_usuario(usuarioDetails.getFoto_usuario());
             usuario.setNombre(usuarioDetails.getNombre());
             usuario.setApellidos(usuarioDetails.getApellidos());
             usuario.setEmail(usuarioDetails.getEmail());
-            usuario.setContrasena(usuarioDetails.getContrasena());
+
+            // Codificar la nueva contraseña solo si se proporciona
+        if (usuarioDetails.getContrasena() != null && !usuarioDetails.getContrasena().isEmpty()) {
+            usuario.setContrasena(passwordEncoder.encode(usuarioDetails.getContrasena()));
+        }
+            
+            usuario.setCiudad(usuarioDetails.getCiudad());
             usuario.setDireccion(usuarioDetails.getDireccion());
             usuario.setDocumento_identidad(usuarioDetails.getDocumento_identidad());
             usuario.setCelular(usuarioDetails.getCelular());
             usuario.setRol(usuarioDetails.getRol());
+            
             return userRepository.save(usuario);
         }
         return null;

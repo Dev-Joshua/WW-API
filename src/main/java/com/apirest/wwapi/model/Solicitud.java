@@ -12,6 +12,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -43,12 +44,12 @@ public class Solicitud {
     @JsonBackReference("mascota-solicitud")
     private Mascota mascota;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
     @JsonBackReference("cliente-solicitud")
     private Usuario cliente;  // Este es el usuario que solicita el servicio
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "prestador_id")
     @JsonBackReference("prestador-solicitud")
     private Usuario prestador;
@@ -63,29 +64,17 @@ public class Solicitud {
 
 
     public enum Estado {
-        PENDIENTE("Pendiente"),
-        EN_CURSO("En curso"),
-        FINALIZADO("Finalizado");
+        PENDIENTE,
+        EN_CURSO,
+        FINALIZADO;
 
-        private final String displayName;
-
-        Estado(String displayName) {
-            this.displayName = displayName;
-        }
-
-        @JsonValue
-        public String getDisplayName() {
-            return displayName;
-        }
-        
         @JsonCreator
         public static Estado fromString(String value) {
-        for (Estado estado : Estado.values()) {
-            if (estado.displayName.equalsIgnoreCase(value)) {
-                return estado;
+            try {
+                return Estado.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+               throw new IllegalArgumentException("Estado no válido: " + value);
             }
-        }
-        throw new IllegalArgumentException("Estado no válido: " + value);
         }
     }
     

@@ -2,6 +2,8 @@ package com.apirest.wwapi.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import jakarta.transaction.Transactional;
 @Service
 public class SolicitudService {
 
+    private static final Logger logger = LoggerFactory.getLogger(SolicitudService.class);
+
     @Autowired
     private SolicitudRepo requestRepository;
 
@@ -23,14 +27,17 @@ public class SolicitudService {
     private PagoRepo payrepRepository;
 
     public List<Solicitud> getAll() {
+        // logger.info("Obteniendo todas las solicitudes");
         return requestRepository.findAll();
     }
 
     public Solicitud findByIdRequest(Integer id) {
+        // logger.info("Buscando solicitud por ID: {}", id);
         return requestRepository.findById(id).orElse(null);
     }
 
     public List<Solicitud> findByUsuario(Usuario usuario) {
+        //  logger.info("Buscando solicitudes por usuario: {}", usuario.getId_usuario());
         return requestRepository.findByClienteOrPrestador(usuario, usuario);
     }
 
@@ -41,6 +48,7 @@ public class SolicitudService {
             pay.setSolicitud(request);  // Establece la relación bidireccional
             payrepRepository.save(pay);
         }
+        // logger.info("Creando solicitud: {}", request);
         return requestRepository.save(request);
     }
 

@@ -1,5 +1,6 @@
 package com.apirest.wwapi.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 // import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -46,6 +48,9 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
     private Integer id_usuario;
+
+    @Column(name = "foto_usuario")
+    private String foto_usuario;
     
     @Column(name = "nombre")
     private String nombre;
@@ -55,6 +60,9 @@ public class Usuario implements UserDetails {
 
     @Column(name = "documento_identidad")
     private String documento_identidad;
+
+    @Column(name = "ciudad")
+    private String ciudad;
 
     @Column(name = "direccion")
     private String direccion;
@@ -89,12 +97,13 @@ public class Usuario implements UserDetails {
         inverseJoinColumns = @JoinColumn(name = "servicio_id")
     )
     @JsonBackReference("usuario-servicio")
-    private List<Servicio> servicios;
+    private List<Servicio> servicios = new ArrayList<>();
+
+    
 
     public enum Role {
         CLIENTE, ENTRENADOR, PASEADOR, CUIDADOR
     }
-
 
 
     //Getters & Setters
@@ -104,6 +113,14 @@ public class Usuario implements UserDetails {
 
     public void setId_usuario(Integer id_usuario) {
         this.id_usuario = id_usuario;
+    }
+
+    public String getFoto_usuario() {
+        return foto_usuario;
+    }
+
+    public void setFoto_usuario(String foto_usuario) {
+        this.foto_usuario = foto_usuario;
     }
 
     public String getNombre() {
@@ -137,6 +154,15 @@ public class Usuario implements UserDetails {
     public void setDocumento_identidad(String documento_identidad) {
         this.documento_identidad = documento_identidad;
     }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+
 
     public String getDireccion() {
         return direccion;
@@ -187,6 +213,9 @@ public class Usuario implements UserDetails {
     }
 
     public List<Servicio> getServicios() {
+         if (this.servicios == null) {
+            this.servicios = new ArrayList<>();
+        }
         return servicios;
     }
 
@@ -194,7 +223,10 @@ public class Usuario implements UserDetails {
         this.servicios = servicios;
     }
 
+
+
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority((rol.name())));
     }

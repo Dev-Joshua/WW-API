@@ -12,9 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequest {
+    String foto_usuario;
     String nombre;
     String apellidos;
     String documento_identidad;
+    String ciudad;
     String direccion;
     String celular;
     String email;
