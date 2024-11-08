@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apirest.wwapi.model.Mascota;
@@ -103,16 +104,16 @@ public class UsuarioController {
             Usuario usuario = userService.getUserById(id);
             if (usuario == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
-                }
+            }
             
-                userService.deleteUser(id);
-                return ResponseEntity.ok("Usuario eliminado exitosamente");
-                }
+            userService.deleteUser(id);
+            return ResponseEntity.ok("Usuario eliminado exitosamente");
+    }
             
             
-            @GetMapping("/{id}/mascotas")
-            public ResponseEntity<List<Mascota>> obtenerMascotasPorUsuario(@PathVariable Integer id) {
-                    Usuario usuario = userService.getUserById(id);
+    @GetMapping("/{id}/mascotas")
+    public ResponseEntity<List<Mascota>> obtenerMascotasPorUsuario(@PathVariable Integer id) {
+        Usuario usuario = userService.getUserById(id);
         if (usuario == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -130,5 +131,14 @@ public class UsuarioController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaMascota);
     }
-
+    
+    @GetMapping("/filtrar")
+    public ResponseEntity<List<Usuario>> filtrarPrestadores(
+        @RequestParam(required = false) String ciudad,
+        @RequestParam(required = false) Integer servicioId,
+        @RequestParam(required = false) String nombre
+    ) {
+        List<Usuario> prestadores = userService.filtrarPrestadores(ciudad, servicioId, nombre);
+        return ResponseEntity.ok(prestadores);
+    }
 }

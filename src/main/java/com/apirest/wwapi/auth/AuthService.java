@@ -3,6 +3,7 @@ package com.apirest.wwapi.auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,14 +34,19 @@ public class AuthService {
     
 
     public AuthResponse login(LoginRequest request) {
+        try {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getContrasena()));
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Credenciales inválidas"); 
+        }
+
         UserDetails usuario = usuarioRepo.findByEmail(request.getEmail()).orElseThrow();
         String token = jwtService.getToken(usuario);
-        
+    
         return AuthResponse.builder().token(token).build();
     }
     
-     public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
         Usuario usuario = Usuario.builder()
                 .foto_usuario(request.getFoto_usuario())
                 .nombre(request.getNombre())

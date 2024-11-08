@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.apirest.wwapi.model.Mascota;
 import com.apirest.wwapi.repository.MascotaRepo;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class MascotaService {
 
@@ -30,6 +32,7 @@ public class MascotaService {
     }
 
     //Actualizar una mascota existente
+    @Transactional
     public Mascota updatePet(Integer id, Mascota mascotaDetails) {
         Mascota pet = petRepository.findById(id).orElse(null);
         if (pet != null) {

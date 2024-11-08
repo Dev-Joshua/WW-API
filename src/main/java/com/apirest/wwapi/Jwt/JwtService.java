@@ -10,6 +10,8 @@ import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.apirest.wwapi.model.Usuario;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -26,6 +28,13 @@ public class JwtService {
     }
 
     private String getToken(Map<String, Object> extraClaims, UserDetails usuario) {
+
+        // Si el usuario es una instancia de Usuario, obtener el ID
+        if (usuario instanceof Usuario) {
+            Integer userId = ((Usuario) usuario).getId_usuario(); 
+            extraClaims.put("userId", userId); 
+        }
+
         return Jwts
             .builder()
             .setClaims(extraClaims)
@@ -67,11 +76,11 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    private Date getExpiration(String token) {
+    public Date getExpiration(String token) {
         return getClaim(token, Claims::getExpiration);
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return getExpiration(token).before(new Date());
     }
 }

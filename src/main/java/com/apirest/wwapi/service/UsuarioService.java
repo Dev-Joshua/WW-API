@@ -52,6 +52,7 @@ public class UsuarioService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
     }
+    
     //Create
     public Usuario createUser(Usuario user) {
 
@@ -140,5 +141,9 @@ public class UsuarioService {
             return true;
         }
         return false;
+    }
+
+     public List<Usuario> filtrarPrestadores(String ciudad, Integer servicioId, String nombre) {
+        return userRepository.filtrarPrestadores(ciudad, servicioId, nombre);
     }
 }

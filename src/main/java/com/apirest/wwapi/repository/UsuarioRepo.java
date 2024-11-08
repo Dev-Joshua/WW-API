@@ -15,8 +15,21 @@ public interface UsuarioRepo extends JpaRepository<Usuario, Integer> {
     @Query("SELECT u FROM Usuario u JOIN u.servicios s WHERE s.id_servicio = :servicioId")
     List<Usuario> findByServicioId(@Param("servicioId") Integer servicioId);
 
-    // Optional<Usuario> findByEmail(String email);
+    // Buscar usuarioi por email
     Optional<Usuario> findByEmail(String email);
+
+     // Filtrar usuarios por ciudad, servicio y nombre
+    @Query("SELECT u FROM Usuario u JOIN u.servicios s WHERE " +
+           "(:ciudad IS NULL OR u.ciudad = :ciudad) " +
+           "AND (:servicioId IS NULL OR s.id_servicio = :servicioId) " +
+           "AND (:nombre IS NULL OR LOWER(u.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')))")
+    List<Usuario> filtrarPrestadores(
+        @Param("ciudad") String ciudad,
+        @Param("servicioId") Integer servicioId,
+        @Param("nombre") String nombre
+    );
+
+    
 }
 
 

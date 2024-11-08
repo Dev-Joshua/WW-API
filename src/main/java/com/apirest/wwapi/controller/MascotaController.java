@@ -1,6 +1,8 @@
 package com.apirest.wwapi.controller;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,10 +37,22 @@ public class MascotaController {
         return petService.getAllPets();
     }
 
+    // @GetMapping("/{id}")
+    // public Mascota getMascotaById(@PathVariable Integer id) {
+    //     return petService.getPetById(id);
+    // }
+
     @GetMapping("/{id}")
-    public Mascota getMascotaById(@PathVariable Integer id) {
-        return petService.getPetById(id);
+    public ResponseEntity<Mascota> getMascotaById(@PathVariable Integer id) {
+         Mascota mascota = petService.getPetById(id);
+
+        if (mascota == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(mascota);
     }
+
 
     @PostMapping
     public Mascota createMascota(@RequestBody Mascota mascota) {
@@ -46,10 +60,10 @@ public class MascotaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String>  updateMascota(@PathVariable Integer id, @RequestBody Mascota mascotaDetails) {
+    public ResponseEntity<Map<String, String>> updateMascota(@PathVariable Integer id, @RequestBody Mascota mascotaDetails) {
         Mascota mascota = petService.getPetById(id);
         if (mascota == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mascota no encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", "Mascota no encontrada"));
         }
         
         mascota.setTipo_mascota(mascotaDetails.getTipo_mascota());
@@ -66,7 +80,7 @@ public class MascotaController {
 
         petService.updatePet(id, mascotaDetails);
        
-        return ResponseEntity.ok("Mascota actualizada exitosamente");
+        return ResponseEntity.ok(Collections.singletonMap("message", "Mascota no encontrada"));
        
     }
 

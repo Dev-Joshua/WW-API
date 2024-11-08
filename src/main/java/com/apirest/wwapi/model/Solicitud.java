@@ -1,6 +1,7 @@
 package com.apirest.wwapi.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -18,6 +19,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -34,22 +36,22 @@ public class Solicitud {
     private LocalDateTime fecha_solicitud;
 
     //Relaciones 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "servicio_id")
     @JsonBackReference("servicio-solicitud")
     private Servicio servicio;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mascota_id")
     @JsonBackReference("mascota-solicitud")
     private Mascota mascota;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     @JsonBackReference("cliente-solicitud")
     private Usuario cliente;  // Este es el usuario que solicita el servicio
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prestador_id")
     @JsonBackReference("prestador-solicitud")
     private Usuario prestador;
@@ -62,9 +64,13 @@ public class Solicitud {
     @Column(name = "estado")
     private Estado estado;
 
+    // @OneToMany(mappedBy = "solicitud", cascade = CascadeType.ALL)
+    // private List<Notificacion> notificaciones;
+
 
     public enum Estado {
         PENDIENTE,
+        ACEPTADO,
         EN_CURSO,
         FINALIZADO;
 
@@ -142,6 +148,14 @@ public class Solicitud {
     public void setPrestador(Usuario prestador) {
         this.prestador = prestador;
     }
+
+    // public List<Notificacion> getNotificaciones() {
+    //     return notificaciones;
+    // }
+
+    // public void setNotificaciones(List<Notificacion> notificaciones) {
+    //     this.notificaciones = notificaciones;
+    // }
 
     
 }
