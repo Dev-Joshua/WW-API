@@ -2,6 +2,7 @@ package com.apirest.wwapi.model;
 
 import java.time.LocalDateTime;
 
+// Entidad solciitudDTO para listar datos de los dos usuarios cliente/prestador
 public class SolicitudDTO {
     private Integer id_solicitud;
     private LocalDateTime fechaSolicitud;

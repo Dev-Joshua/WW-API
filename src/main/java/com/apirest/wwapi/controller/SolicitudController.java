@@ -35,6 +35,7 @@ import com.apirest.wwapi.service.ServicioService;
 import com.apirest.wwapi.service.SolicitudService;
 import com.apirest.wwapi.service.UsuarioService;
 
+// Controlador para las solicitudes 
 @RestController
 @RequestMapping("/api/v1/wwdemo/solicitudes")
 public class SolicitudController {
@@ -55,9 +56,7 @@ public class SolicitudController {
     @Autowired
     private ServicioService servicioService;
 
-    // @Autowired
-    // private NotificacionService notificacionService;
-
+ 
     // Metodos para API REST
     @GetMapping
     public List<Solicitud> getAllRequests() {
@@ -69,46 +68,7 @@ public class SolicitudController {
         return requestService.findByIdRequest(id);
     }
 
-    // @GetMapping("/{servicioId}/prestadores")
-    // public ResponseEntity<List<Usuario>> getServiceProvider(@PathVariable Integer servicioId) {
-        
-    //     Servicio servicio = servicioService.findById(servicioId);
-        
-    //     if (servicio == null) {
-    //     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    //     }
-
-    //     List<Usuario> prestadores = new ArrayList<>(servicio.getUsuarios());
-    //     return ResponseEntity.ok(prestadores);
-    // }
-
-    //   // 1. Obtener las solicitudes pendientes de un prestador (por su ID)
-    // @GetMapping("/prestador/{prestadorId}/pendientes")
-    // public ResponseEntity<List<Solicitud>> getSolicitudesPendientes(@PathVariable Integer prestadorId) {
-    //     List<Solicitud> solicitudesPendientes = requestService.getSolicitudesPendientes(prestadorId);
-    //     return ResponseEntity.ok(solicitudesPendientes);
-    // }
-
-    // // 2. Cambiar el estado de una solicitud
-    // @PatchMapping("/{solicitudId}/estado")
-    // public ResponseEntity<Solicitud> cambiarEstadoSolicitud(
-    //         @PathVariable Integer solicitudId,
-    //         @RequestParam("estado") String nuevoEstado) {
-
-    //     Solicitud solicitud = requestService.findByIdRequest(solicitudId);
-    //     if (solicitud == null) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    //     }
-
-    //     try {
-    //         Solicitud.Estado estado = Solicitud.Estado.fromString(nuevoEstado);
-    //         solicitud.setEstado(estado);
-    //         requestService.createRequest(solicitud); // Guardar cambios
-    //         return ResponseEntity.ok(solicitud);
-    //     } catch (IllegalArgumentException e) {
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    //     }
-    // }
+ 
 
     @PostMapping("/{usuarioId}")
     public ResponseEntity<Solicitud> createQuery(
@@ -174,67 +134,13 @@ public class SolicitudController {
 
         Solicitud newRequest = requestService.createRequest(request);
 
-        // Enviar notificación al prestador
-        // String mensaje = "Tienes una nueva solicitud del cliente: " + cliente.getNombre();
-        // notificacionService.crearNotificacion(newRequest, prestador, mensaje);
+     
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newRequest);
         
     }
     
-    // public Solicitud createRequest(@RequestBody Solicitud solicitud) {
-    //     return requestService.createRequest(solicitud);
-    // }
-
-    // // Aceptar o rechazar una solicitud
-    // @PatchMapping("/{id}/estado")
-    // public ResponseEntity<Solicitud> cambiarEstadoSolicitud(
-    //         @PathVariable Integer id, 
-    //         @RequestParam Estado estado) {
-    //     Solicitud solicitud = requestService.findByIdRequest(id);
-
-    //     if (solicitud == null) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    //     }
-
-    //     if (estado == Estado.EN_CURSO || estado == Estado.PENDIENTE) {
-    //         solicitud.setEstado(estado);
-    //         requestService.createRequest(solicitud);
-    //         return ResponseEntity.ok(solicitud);
-    //     } else {
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    //     }
-    // }
-
-    // // Iniciar un servicio
-    // @PatchMapping("/{id}/iniciar")
-    // public ResponseEntity<Solicitud> iniciarServicio(@PathVariable Integer id) {
-    //     Solicitud solicitud = requestService.findByIdRequest(id);
-
-    //     if (solicitud == null || solicitud.getEstado() != Estado.EN_CURSO) {
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    //     }
-
-    //     solicitud.setEstado(Estado.EN_CURSO);
-    //     solicitud.setFecha_solicitud(LocalDateTime);
-    //     requestService.createRequest(solicitud);
-    //     return ResponseEntity.ok(solicitud);
-    // }
-
-    // // Finalizar un servicio
-    // @PatchMapping("/{id}/finalizar")
-    // public ResponseEntity<Solicitud> finalizarServicio(@PathVariable Integer id) {
-    //     Solicitud solicitud = requestService.findByIdRequest(id);
-
-    //     if (solicitud == null || solicitud.getEstado() != Estado.EN_CURSO) {
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    //     }
-
-    //     solicitud.setEstado(Estado.FINALIZADO);
-    //     solicitud.setFecha_solicitud(LocalDateTime);
-    //     requestService.createRequest(solicitud);
-    //     return ResponseEntity.ok(solicitud);
-    // }
+   
 
     // Obtener solicitudes por usuario
     @GetMapping("/usuario/{usuarioId}")

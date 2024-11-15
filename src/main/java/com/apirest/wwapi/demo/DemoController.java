@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
+// Endpoint nativo de la ruta 
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor

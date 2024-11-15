@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Reespuesta de token para la autenticacion
 @Data
 @Builder
 @NoArgsConstructor

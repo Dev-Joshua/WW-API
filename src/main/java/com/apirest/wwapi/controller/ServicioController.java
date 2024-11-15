@@ -22,6 +22,7 @@ import com.apirest.wwapi.model.Usuario;
 import com.apirest.wwapi.service.ServicioService;
 import com.apirest.wwapi.service.UsuarioService;
 
+// Controlador para los servicios
 @RestController
 @RequestMapping("/api/v1/wwdemo/servicios")
 public class ServicioController {

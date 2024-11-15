@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.apirest.wwapi.model.Usuario;
 import com.apirest.wwapi.service.UsuarioService;
 
+// Controlador para el perfil del usuario
 @RestController
 @RequestMapping("/api/v1/wwdemo/")
 public class PerfilController {

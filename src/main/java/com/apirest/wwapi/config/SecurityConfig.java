@@ -20,6 +20,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import lombok.RequiredArgsConstructor;
 
+// Seguridad mediante JwtAuthenticationFilter
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor

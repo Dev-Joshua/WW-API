@@ -31,16 +31,10 @@ public class MascotaController {
     private UsuarioService userService;
 
     //Metodos para API REST
-
     @GetMapping
     public List<Mascota> getAllData() {
         return petService.getAllPets();
     }
-
-    // @GetMapping("/{id}")
-    // public Mascota getMascotaById(@PathVariable Integer id) {
-    //     return petService.getPetById(id);
-    // }
 
     @GetMapping("/{id}")
     public ResponseEntity<Mascota> getMascotaById(@PathVariable Integer id) {
@@ -88,10 +82,10 @@ public class MascotaController {
     public ResponseEntity<String> deleteMascota(@PathVariable Integer id) {
         Mascota mascota = petService.getPetById(id);
         if (mascota == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mascota no encontrada");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         
         petService.deletePet(id);
-        return ResponseEntity.ok("Mascota eliminada exitosamente");
+        return ResponseEntity.noContent().build();
         }
 }

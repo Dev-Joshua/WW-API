@@ -28,7 +28,7 @@ import com.apirest.wwapi.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
-
+// Controlador para las acciones del usuario
 @RestController
 @RequestMapping("/api/v1/wwdemo/usuarios")
 @RequiredArgsConstructor
@@ -45,7 +45,6 @@ public class UsuarioController {
     private MascotaService petService;
     
     //Metodos para API REST
-
     @GetMapping
     public List<Usuario> getAllData() {
         return userService.getAllUsers();
@@ -103,11 +102,11 @@ public class UsuarioController {
     public ResponseEntity<String> deleteUsuario(@PathVariable Integer id) {
             Usuario usuario = userService.getUserById(id);
             if (usuario == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usuario no encontrado");
             }
             
             userService.deleteUser(id);
-            return ResponseEntity.ok("Usuario eliminado exitosamente");
+            return ResponseEntity.noContent().build();
     }
             
             

@@ -23,6 +23,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+// Entidad Solicitud
 @Entity
 @Table(name = "solicitudes")
 public class Solicitud {
@@ -63,9 +64,6 @@ public class Solicitud {
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")
     private Estado estado;
-
-    // @OneToMany(mappedBy = "solicitud", cascade = CascadeType.ALL)
-    // private List<Notificacion> notificaciones;
 
 
     public enum Estado {
@@ -148,14 +146,6 @@ public class Solicitud {
     public void setPrestador(Usuario prestador) {
         this.prestador = prestador;
     }
-
-    // public List<Notificacion> getNotificaciones() {
-    //     return notificaciones;
-    // }
-
-    // public void setNotificaciones(List<Notificacion> notificaciones) {
-    //     this.notificaciones = notificaciones;
-    // }
 
     
 }

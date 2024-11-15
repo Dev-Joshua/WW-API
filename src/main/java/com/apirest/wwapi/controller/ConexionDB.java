@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
+// Controlador para verificar la conexion
 @Controller
 public class ConexionDB {
     

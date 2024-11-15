@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+// Entidad Pago
 @Entity
 @Table(name = "pagos")
 public class Pago {

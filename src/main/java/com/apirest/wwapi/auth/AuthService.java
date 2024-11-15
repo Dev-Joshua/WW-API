@@ -8,7 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-// import org.springframework.core.userdetails.UserDetails;
+
 
 import com.apirest.wwapi.Jwt.JwtService;
 import com.apirest.wwapi.model.Usuario;
@@ -19,6 +19,7 @@ import com.apirest.wwapi.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
+// Servicio para autenticacion
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -66,7 +67,7 @@ public class AuthService {
                 
                 Usuario nuevoUsuario = usuarioService.createUser(usuario);
 
-                return AuthResponse.builder()   // Usa el usuario guardado para generar el token
+                return AuthResponse.builder()   // Usar el usuario guardado para generar el token
                     .token(jwtService.getToken(nuevoUsuario))
                     .build();
     }
